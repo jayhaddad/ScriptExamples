@@ -1,1 +1,21 @@
-Hello
+## Part 1 - Capture onprem AD users info
+
+1. Run get-aduser against specific OU or all users in onprem AD environment.
+  - Examples of get-aduser command
+    - $Users = Get-ADUser -Filter 'Enabled -eq $true' -SearchBase "OU=Finance,OU=UserAccounts,DC=FABRIKAM,DC=COM" -Properties *
+    - $Users = Get-ADUser -Filter 'Enabled -eq $true' -Properties *
+
+2. Export select user attributes to CSV.  Review CSV to ensure output appears correct, satisfies business requirements, and contains no empty values.
+  - Example:
+    - ```$Users  | Select-Object DisplayName, GivenName, Surname, UserPrincipalName, Department, JobTitle, OfficePhone, LastLogonDate, Enabled | export-csv -NoTypeInformation users3.csv```
+  - Reference links:
+    - https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.users/new-mguser?view=graph-powershell-1.0
+    - https://learn.microsoft.com/en-us/powershell/module/activedirectory/get-aduser?view=windowsserver2022-ps
+
+## Part 2 - Run Graph powershell script
+
+1. Ensure your workstation has Graph Powershell Cmdlets
+2. Run the create-aadfromuserscsv.ps1 script
+3. Review output for errors
+
+
