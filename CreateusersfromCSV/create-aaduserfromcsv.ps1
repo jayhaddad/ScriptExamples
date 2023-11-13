@@ -18,7 +18,7 @@ function New-TempPassword {
 Connect-MgGraph -Scopes User.ReadWrite.All
 
 # Specify the path of the CSV file
-$CSVFilePath = ".\users3.csv"
+$CSVFilePath = ".\users.csv"
 
 # Import data from CSV file
 $AADUsers = Import-Csv -Path $CSVFilePath
