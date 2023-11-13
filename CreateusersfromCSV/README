@@ -1,3 +1,10 @@
+Prerequisites
+
+1. The ability to run get-aduser,part of the Active Directory PowerShell Module, against your domain controller.
+2. You are able to download and install a version of MS Graph PowerShell module.
+3. Please review the CSV generated in part 1, to ensure CSV output appears correct, satisifies business requirements, and contains no empty values.
+
+
 Part 1 - Capture onprem AD users info
 
 1. Run get-aduser against specific OU or all users in onprem AD environment.
