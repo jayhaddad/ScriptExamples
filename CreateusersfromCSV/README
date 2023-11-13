@@ -7,7 +7,7 @@
 
 2. Export select user attributes to CSV.  Review CSV to ensure output appears correct, satisfies business requirements, and contains no empty values.
   - Example:
-    - ```$Users  | Select-Object DisplayName, GivenName, Surname, UserPrincipalName, Department, JobTitle, OfficePhone, LastLogonDate, Enabled | export-csv -NoTypeInformation users.csv```
+    - $Users  | Select-Object DisplayName, GivenName, Surname, UserPrincipalName, Department, JobTitle, OfficePhone, LastLogonDate, Enabled | export-csv -NoTypeInformation users.csv
   - Reference links:
     - https://learn.microsoft.com/en-us/powershell/module/microsoft.graph.users/new-mguser?view=graph-powershell-1.0
     - https://learn.microsoft.com/en-us/powershell/module/activedirectory/get-aduser?view=windowsserver2022-ps
