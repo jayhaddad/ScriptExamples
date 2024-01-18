@@ -1,0 +1,110 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "equals": "Microsoft.Compute/virtualMachines",
+          "field": "type"
+        }
+      ]
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "name": "[concat(first(split(field('fullName'), '/')), '/mma1')]",
+        "deployment": {
+          "properties": {
+            "mode": "Incremental",
+            "parameters": {
+              "location": {
+                "value": "[field('location')]"
+              },
+              "vmName": {
+                "value": "[field('name')]"
+              },
+              "encodedCommand": {
+                "reference": {
+                  "keyVault": {
+                    "id": "keyvaultresourceid"
+                  },
+                  "secretName": "encodedcommand"
+                }
+              },
+              "NameofExtension": {
+                "value": "[parameters('nameofExtension')]"
+              }
+            },
+            "template": {
+              "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "location": {
+                  "type": "String"
+                },
+                "vmName": {
+                  "type": "String"
+                },
+                "encodedCommand": {
+                  "type": "SecureString"
+                },
+                "NameofExtension": {
+                  "type": "string"
+                }
+              },
+              "variables": {},
+              "resources": [
+                {
+                  "type": "Microsoft.Compute/virtualMachines/extensions",
+                  "name": "[concat(parameters('vmName'),'/', parameters('NameofExtension'))]",
+                  "apiVersion": "2018-06-01",
+                  "location": "[parameters('location')]",
+                  "properties": {
+                    "publisher": "Microsoft.Compute",
+                    "type": "CustomScriptExtension",
+                    "typeHandlerVersion": "1.10",
+                    "autoUpgradeMinorVersion": false,
+                    "settings": {},
+                    "protectedSettings": {
+                      "commandToExecute": "[concat('powershell.exe -ExecutionPolicy Unrestricted -encodedcommand ', parameters('encodedCommand'))]"
+                    }
+                  }
+                }
+              ],
+              "outputs": {}
+            }
+          }
+        },
+        "existenceCondition": {
+          "allOf": [
+            {
+              "equals": "CustomScriptExtension",
+              "field": "Microsoft.Compute/virtualMachines/extensions/type"
+            },
+            {
+              "equals": "Microsoft.Compute",
+              "field": "Microsoft.Compute/virtualMachines/extensions/publisher"
+            },
+            {
+              "equals": "Succeeded",
+              "field": "Microsoft.Compute/virtualMachines/extensions/provisioningState"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "nameofExtension": {
+      "type": "String",
+      "metadata": {
+        "displayName": "nameofExtension",
+        "description": "Name of extension"
+      }
+    }
+  }
+}
