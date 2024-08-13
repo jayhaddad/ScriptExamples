@@ -1,0 +1,80 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "in": [
+            "Microsoft.Compute/virtualMachines",
+            "Microsoft.Storage/storageAccounts",
+            "Microsoft.Network/networkInterfaces"
+          ]
+        },
+        {
+          "anyOf": [
+            {
+              "not": {
+                "field": "[concat('tags[', parameters('tags')[0].tagName, ']')]",
+                "exists": "true"
+              }
+            },
+            {
+              "not": {
+                "field": "[concat('tags[', parameters('tags')[1].tagName, ']')]",
+                "exists": "true"
+              }
+            },
+            {
+              "field": "tags",
+              "notIn": "[array(parameters('tags')[0].tagValue)]"
+            },
+            {
+              "field": "tags",
+              "notIn": "[array(parameters('tags')[1].tagValue)]"
+            }
+          ]
+        }
+      ]
+    },
+    "then": {
+      "effect": "modify",
+      "details": {
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/4a9ae827-6dc8-4573-8ac7-8239d42aa03f"
+        ],
+        "operations": [
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tags')[0].tagName, ']')]",
+            "value": "[parameters('tags')[0].tagValue]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tags')[1].tagName, ']')]",
+            "value": "[parameters('tags')[1].tagValue]"
+          }
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "tags": {
+      "type": "Array",
+      "metadata": {
+        "displayName": "tags",
+        "description": "The tags to apply to the resources."
+      },
+      "defaultValue": [
+        {
+          "tagName": "Environment",
+          "tagValue": "Production"
+        },
+        {
+          "tagName": "Department",
+          "tagValue": "IT"
+        }
+      ]
+    }
+  }
+}
